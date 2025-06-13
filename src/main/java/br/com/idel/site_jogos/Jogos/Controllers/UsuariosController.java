@@ -42,7 +42,7 @@ public class UsuariosController {
     @PutMapping("/{id}")
     public ResponseEntity<?> atualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuarioAtualizado) {
         return usuariosService.listarPorId(id).map(usuarioExistente -> {
-            usuarioExistente.setEmail(usuarioAtualizado.getEmail());
+            usuarioExistente.setEmail_usuario(usuarioAtualizado.getEmail_usuario());
             Usuario atualizada = usuariosService.atualizarUsuario(usuarioExistente);
             return ResponseEntity.ok(atualizada);
         }).orElse(ResponseEntity.notFound().build());
