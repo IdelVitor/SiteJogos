@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.function.IntToLongFunction;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -36,5 +37,23 @@ public class UsuariosController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> atualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuarioAtualizado) {
+        return usuariosService.listarPorId(id).map(usuarioExistente -> {
+            usuarioExistente.setEmail(usuarioAtualizado.getEmail());
+            Usuario atualizada = usuariosService.atualizarUsuario(usuarioExistente);
+            return ResponseEntity.ok(atualizada);
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> atualizarSenha(@PathVariable Long id, @RequestBody Usuario atualizarSenha) {
+        return usuariosService.listarPorId(id).map(usuarioExistente -> {
+            usuarioExistente.setSenha(atualizarSenha.getSenha());
+            Usuario atualizada = usuariosService.atualizarUsuario(usuarioExistente);
+            return ResponseEntity.ok(atualizada);
+        }).orElse(ResponseEntity.notFound().build());
     }
 }

@@ -27,7 +27,7 @@ public class UsuariosService {
         return usuariosRepository.findById(id);
     }
 
-    public Usuario atualizarEmpresa(Usuario usuarioExistente){
+    public Usuario atualizarUsuario(Usuario usuarioExistente){
         return usuariosRepository.save(usuarioExistente);
     }
 
