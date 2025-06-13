@@ -63,6 +63,6 @@ public class UsuariosController {
             return ResponseEntity.notFound().build();
         }
         usuariosService.deletar(id);
-        return ResponseEntity.noContent().build(); // 204 No Content
+        return ResponseEntity.noContent().build();
     }
 }
