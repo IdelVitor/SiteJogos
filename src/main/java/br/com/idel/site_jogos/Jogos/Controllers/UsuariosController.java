@@ -56,4 +56,13 @@ public class UsuariosController {
             return ResponseEntity.ok(atualizada);
         }).orElse(ResponseEntity.notFound().build());
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> removerUsuario(@PathVariable Long id) {
+        if (usuariosService.listarPorId(id).isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        usuariosService.deletar(id);
+        return ResponseEntity.noContent().build(); // 204 No Content
+    }
 }
