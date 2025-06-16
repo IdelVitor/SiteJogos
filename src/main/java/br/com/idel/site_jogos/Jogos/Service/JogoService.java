@@ -1,38 +1,42 @@
 package br.com.idel.site_jogos.Jogos.Service;
 
 import br.com.idel.site_jogos.Jogos.Model.Jogo;
-import br.com.idel.site_jogos.Jogos.Model.Usuario;
-import br.com.idel.site_jogos.Jogos.Repository.JogoRepository;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
-@Service
 public class JogoService {
 
-    private JogoRepository jogoRepository;
+        @Autowired
+        private RestTemplate restTemplate;
 
-    public Jogo adcionarJogo(Jogo jogo) {
-        if (jogo.getNome() != null) {
-            throw new IllegalArgumentException("Jogo já cadastrado");
+        private final String apiKey = "SUA_API_KEY_AQUI";
+
+        public List<Jogo> buscarEventosPorJogo(String nomeJogo) {
+            String url = "https://api.rawg.io/api/games?key=" + apiKey + "&search=" + nomeJogo;
+
+            Map<String, Object> resposta = restTemplate.getForObject(url, Map.class);
+            List<Map<String, Object>> resultados = (List<Map<String, Object>>) resposta.get("results");
+
+            List<Jogo> jogos = new ArrayList<>();
+
+            for (Map<String, Object> jogo : resultados) {
+                String nome = (String) jogo.get("name");
+                String imagem = (String) jogo.get("background_image");
+                String dataLancamento = (String) jogo.get("released");
+
+                String plataforma = "";
+                List<Map<String, Object>> plataformas = (List<Map<String, Object>>) jogo.get("platforms");
+                if (plataformas != null && !plataformas.isEmpty()) {
+                    Map<String, Object> plataformaObj = (Map<String, Object>) plataformas.get(0).get("platform");
+                    plataforma = (String) plataformaObj.get("name");
+                }
+
+                jogos.add(new Jogo(nome, imagem, dataLancamento, plataforma));
+            }
+            return jogos;
         }
-        return jogoRepository.save(jogo);
-    }
-
-    public List<Jogo> listarTodos(){
-        return jogoRepository.findAll();
-    }
-
-    public Optional<Jogo> listarPorId(Long id) {
-        return jogoRepository.findById(id);
-    }
-
-    public Jogo atualizarJogo(Jogo jogoExistente){
-        return jogoRepository.save(jogoExistente);
-    }
-
-    public void deletar(Long id) {
-        jogoRepository.deleteById(id);
-    }
 }
