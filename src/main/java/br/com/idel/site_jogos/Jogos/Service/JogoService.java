@@ -15,7 +15,7 @@ public class JogoService {
 
         private final String apiKey = "SUA_API_KEY_AQUI";
 
-        public List<Jogo> buscarEventosPorJogo(String nomeJogo) {
+        public List<Jogo> buscarJogo(String nomeJogo) {
             String url = "https://api.rawg.io/api/games?key=" + apiKey + "&search=" + nomeJogo;
 
             Map<String, Object> resposta = restTemplate.getForObject(url, Map.class);

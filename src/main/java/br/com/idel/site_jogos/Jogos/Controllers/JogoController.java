@@ -22,7 +22,7 @@ public class JogoController {
 
         @GetMapping("/{nomeJogo}")
         public ResponseEntity<List<Jogo>> listarJogos(@PathVariable String nomeJogo) {
-            List<Jogo> eventos = jogoService.buscarEventosPorJogo(nomeJogo);
+            List<Jogo> eventos = jogoService.buscarJogo(nomeJogo);
             return ResponseEntity.ok(eventos);
         }
     }
